@@ -1,0 +1,54 @@
+language: objective-c
+cache:
+  directories:
+    - node_modules
+    - ios/Pods
+    - ~/.nvm
+podfile: "./ios/Podfile"
+osx_image: xcode9.1
+before_install:
+- nvm install 6
+- node --version
+install: [
+    "mkdir -p /Users/travis/build/condoapp/.nvm",
+    "export NVM_DIR=\"/Users/travis/build/condoapp/.nvm\"",
+    "brew install nvm",
+    "source $(brew --prefix nvm)/nvm.sh",
+    "rm -Rf \"${TMPDIR}/jest_preprocess_cache\"",
+    "wget https://github.com/yarnpkg/yarn/releases/download/v0.16.0/yarn-0.16.0.js",
+    "export yarn=\"node $(pwd)/yarn-0.16.0.js\"",
+    "npm install",
+    "git config --global user.email \"batoan1221@gmail.com\"",
+    "git config --global user.name \"batoan1221\"",
+]
+before_script:
+- gem install xcpretty
+- chmod +x scripts/build.sh
+- chmod +x scripts/deploy.sh
+- chmod +x scripts/remove-key.sh
+- "./scripts/add-key.sh"
+script:
+- travis_wait 30 ./scripts/build.sh
+after_script:
+- "./scripts/remove-key.sh"
+after_success:
+- "npm install"
+- "./scripts/deploy.sh"
+branches:
+  only:
+  - build_demo
+env:
+  global:
+  - REPO_SLUG="batoan1221/CondoApp"
+  - TRAGET_BRANCH="build_demo"
+  - WORKSPACE_NAME="CondoApp.xcworkspace"
+  - SCHEME_NAME="CondoApp"
+  - INFO_PLIST_PATH="./ios/CondoApp/Info.plist"
+  - 'PROFILE_NAME="iOS Team Inhouse Provisioning Profile: com.2359Media.CondoApp"'
+  - APP_MANAGER_API_TOKEN="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NzIsImFwaV9rZXkiOiIzNTQyYzhiOC0yZWFiLTQ3YzYtYmU2MC00MWMwZGE3MWI3MTEifQ.i8r83UMl25FhvL-s1gt6ejJgb3zJcTffmX7wUkcei9M"
+  - APP_ID="513"
+  - KEY_PASSWORD=""
+  - BUNDLE_DISPLAY_NAME="2359 Condo"
+  - APP_NAME="CondoApp"
+  - 'DEVELOPER_NAME="iPhone Distribution: 2359 Media Pte Ltd"'
+  - secure: T6azkqbUjj4bYzoXMntt41VciC+eZKxSXKrnVdKKhFqmVCq9HxCJXvmKes532aJH+hdtGAh+7gPPrZhsIbhBTlSHQ1pQsiHUaw6N7F+eodnZUCdOSDvFN/CZv5xFV7sSZxjg4Y1N+pq4S2iJctXNHd4jN9adhN8cckxRWpyZKmxcnAT+6oDe0AkJNo840J9IgzBglNhn1OLB8VV4gst8lhqSF9rjctcSZrb9XupKKmlv/KT78nwuuoxQ3c0XvsdtAfW0ovHRvjdNddMRBj4CARlNgNC9xrX5GndZzrbaq/VqkDSVAD9+BMIc4QuKfSrq1zczLvQHRr7v4CWbcb/6d2MowTzsXfsA7BKqosANk/+bJ+swZ0dZDWYmouP78MgJrh+Vsd8H/my2hJSHBlbtPYS1AVQ8uVD51GhS8lqrV4hhJFauvcO/UjbDDlJjAJrUfZe6BLCRX4ijLqimYHHF+FouEDu+Ns8BgOLqRapapa67yC2bYyPaxOCGzy4LCi1Rd1DjuVZeRotlelV3sy9XDUUoCnFg3yDqMz5VLcWDmS97ngNysq4rZpvWlLkXu6TGQk3dUEtY0cexfEmK3zmuof8IrrpGG3+kITrz9inqIqfuA+l4kodpQByvSuwRLdv5T4xrliauBGpCwxhz1mrDF9XoiJWz4fu1l3sRwj3Uquc=
