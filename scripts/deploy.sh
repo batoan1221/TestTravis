@@ -37,6 +37,14 @@ echo "*                                Archive                               *"
 echo "************************************************************************"
 echo ""
 
+cd ./ios
+xcodebuild \
+ -project "$PROJECT_NAME" \
+ -scheme "$APP_NAME" \
+ -configuration "Release" \
+ -archivePath "$APP_NAME.xcarchive" archive | xcpretty -c
+cd ../
+
 echo ""
 echo "************************************************************************"
 echo "*                      Export Archive to IPA File                      *"

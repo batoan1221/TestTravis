@@ -14,13 +14,7 @@ echo ""
 
 cd ./ios
 xcodebuild \
- -workspace "$WORKSPACE_NAME" \
+ -project "$PROJECT_NAME" \
  -scheme "$APP_NAME" \
  -destination "$DESTINATION" build | xcpretty -c 
-
-xcodebuild \
- -workspace "$WORKSPACE_NAME" \
- -scheme "$APP_NAME" \
- -configuration "Release" \
- -archivePath "$APP_NAME.xcarchive" archive | xcpretty -c
 cd ../
